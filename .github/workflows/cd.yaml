@@ -19,11 +19,11 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install Dependencies
-        working-directory: ./src
+        # working-directory: ./src
         run: npm ci
 
       - name: Run Lint
-        run: npm run lint 
+        run: npm run lint .
 
       - name: Handle Lint Errors
         if: failure()  # Run only if lint failss
@@ -69,9 +69,14 @@ jobs:
   deploy-to-infra:
     runs-on: ubuntu-latest
     # needs: build
-    strategy:
-      matrix:
-        node-version-file: .nvmrc
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
 
     steps:
       - uses: actions/checkout@v1
