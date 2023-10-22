@@ -91,11 +91,11 @@ jobs:
           aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
 
 
-      - name: Terraform destroy
+      - name: Terraform apply
         run: |
           cd setup/terraform
           terraform init
-          terraform destroy -auto-approve
+          terraform apply -auto-approve
 
       # - name: download build image artifact
       #   uses: actions/download-artifact@v3
