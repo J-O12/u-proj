@@ -27,7 +27,7 @@ jobs:
       
       - name: Run ESLint
         working-directory: ./frontend
-        run: npm run lint 
+        run: eslint . --fix 
 
       - name: Handle Lint Errors
         if: failure()  # Run only if tests failed
