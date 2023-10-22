@@ -32,7 +32,7 @@ jobs:
         run: echo "Failed."
 
   test:
-    # needs: lint
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -56,7 +56,7 @@ jobs:
         run: echo "Tests failed. Please check and fix the issues."
 
   build:
-    # needs: test
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
