@@ -95,8 +95,8 @@ jobs:
 
       - name: download build image artifact
         uses: actions/download-artifact@v3
-          with:
-            name: my-docker-image
+        with:
+          name: my-docker-image
 
 
       - name: Push to AWS ECR
