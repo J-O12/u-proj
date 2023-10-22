@@ -19,7 +19,7 @@ jobs:
           node-version: latest
 
       - name: Install Dependencies
-        # working-directory: ./src
+        working-directory: ./frontend
         run: npm ci
       
       - name: Run ESLint
@@ -43,7 +43,7 @@ jobs:
           node-version: latest
 
       - name: Install Dependencies
-        # working-directory: ./src
+        working-directory: ./frontend
         run: npm ci
 
       - name: Run Tests
@@ -67,7 +67,7 @@ jobs:
           node-version: latest
 
       - name: Install Dependencies
-        # working-directory: ./src
+        working-directory: ./frontend
         run: npm ci
       
       - name: Run Build
