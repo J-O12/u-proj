@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version: latest
 
       - name: Install Dependencies
         working-directory: ./frontend
@@ -46,7 +46,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version: latest
 
       - name: Install Dependencies
         working-directory: ./frontend
@@ -74,7 +74,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version: latest
 
       - uses: actions/checkout@v1
       - name: Install Terraform
