@@ -21,17 +21,13 @@ jobs:
       - name: Install Dependencies
         working-directory: ./frontend
         run: npm ci
-
-      - name: install eslint
-        run: npm install eslint --save-dev
       
       - name: Run ESLint
         working-directory: ./frontend
-        run: npm run lint . --fix 
+        run: npm run lint .
 
       - name: Handle Lint Errors
         if: failure()  # Run only if tests failed
-        # run: npm lint . --fix 
         run: echo "Failed."
 
   test:
