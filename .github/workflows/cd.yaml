@@ -76,7 +76,7 @@ jobs:
       - name: Install Terraform
         uses: little-core-labs/install-terraform@v2.0.0
         with:
-            # version: 0.13.4
+            version: 1.6.2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -96,7 +96,7 @@ jobs:
       - name: download build image artifact
         uses: actions/download-artifact@v3
           with:
-          name: my-docker-image
+            name: my-docker-image
 
 
       - name: Push to AWS ECR
