@@ -1,4 +1,4 @@
-name: My Workflow
+name: My Workfloww
 
 on:
   workflow_dispatch:
