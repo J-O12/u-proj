@@ -1,4 +1,4 @@
-name: My Workflow
+name: My Workfloww
 
 on:
   workflow_dispatch:
@@ -7,29 +7,28 @@ on:
       - main
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v3
 
-      - name: Use Node.js 
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
+  #     - name: Use Node.js 
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: latest
 
-      - name: Install Dependencies
-        working-directory: ./frontend
-        run: npm ci
+  #     - name: Install Dependencies
+  #       working-directory: ./frontend
+  #       run: npm ci
       
-      - name: Run ESLint
-        working-directory: ./frontend
-        run: npm run lint .
+  #     - name: Run ESLint
+  #       working-directory: ./frontend
+  #       run: npm run lint
 
-      - name: Handle Lint Errors
-        if: failure()  # Run only if tests failed
-        # run: npm lint --fix .
-        run: echo "Failed."
+  #     - name: Handle Lint Errors
+  #       if: failure()  # Run only if tests failed
+  #       run: echo "Failed."
 
   test:
     # needs: lint

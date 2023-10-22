@@ -16,14 +16,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version: latest
 
       - name: Install Dependencies
-        working-directory: ./src
+        working-directory: ./frontend
         run: npm ci
 
       - name: Run Lint
-        run: npm run lint 
+        run: npm run lint .
 
       - name: Handle Lint Errors
         if: failure()  # Run only if lint failss
@@ -46,14 +46,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version: latest
 
       - name: Install Dependencies
-        working-directory: ./src
+        working-directory: ./frontend
         run: npm ci
 
       - name: Build Docker image
-        working-directory: ./
+        working-directory: ./frontend
         run: |
           docker build -t udac:${{ github.sha }} .
 
@@ -64,16 +64,18 @@ jobs:
           path: setup/terraform
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
       
-
-
   deploy-to-infra:
     runs-on: ubuntu-latest
     # needs: build
-    strategy:
-      matrix:
-        node-version-file: .nvmrc
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+
       - uses: actions/checkout@v1
       - name: Install Terraform
         uses: little-core-labs/install-terraform@v2.0.0
