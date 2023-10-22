@@ -91,21 +91,21 @@ jobs:
           aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
 
 
-      - name: Terraform apply
+      - name: Terraform destroy
         run: |
           cd setup/terraform
           terraform init
-          terraform apply -auto-approve
+          terraform destroy -auto-approve
 
-      - name: download build image artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: my-docker-image
+      # - name: download build image artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: my-docker-image
 
 
-      - name: Push to AWS ECR
-        run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${{ github.sha }}
+      # - name: Push to AWS ECR
+      #   run: |
+      #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${{ github.sha }}
 
 
   
