@@ -88,8 +88,8 @@ jobs:
 
 
       - name: Terraform apply
-        cd setup/terraform
         run: |
+          cd setup/terraform
           terraform init
           terraform apply -auto-approve
 
