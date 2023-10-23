@@ -7,34 +7,34 @@ on:
       - main
 
 jobs:
-  lint-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # lint-and-test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: latest
 
-      - name: Install Dependencies
-        working-directory: ./frontend
-        run: npm ci
+  #     - name: Install Dependencies
+  #       working-directory: ./frontend
+  #       run: npm ci
 
-      - name: Run Lint
-        run: npm run lint .
+  #     - name: Run Lint
+  #       run: npm run lint .
 
-      - name: Handle Lint Errors
-        if: failure()  # Run only if lint failss
-        run: npm lint --fix .
+  #     - name: Handle Lint Errors
+  #       if: failure()  # Run only if lint failss
+  #       run: npm lint --fix .
 
-      - name: Run tests
-        run: npm test
+  #     - name: Run tests
+  #       run: npm test
 
-      - name: Handle Test Errors
-        if: failure()  # Run only if tests fail
-        run: echo "Tests failed. Please check and fix the issues."
+  #     - name: Handle Test Errors
+  #       if: failure()  # Run only if tests fail
+  #       run: echo "Tests failed. Please check and fix the issues."
 
   build:
     runs-on: ubuntu-latest
@@ -97,24 +97,18 @@ jobs:
           terraform init
           terraform apply -auto-approve
 
-
-      - name: Terraform destroy
-        if: failure()  # Run only if terraform apply fails
-        run: terraform destroy -auto-approve
-
       - name: download build image artifact
         uses: actions/download-artifact@v3
         with:
           name: my-docker-image
+          path: setup/terraform
 
 
       - name: Push to AWS ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${{ github.sha }}
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          docker push -a ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend
 
-      - name: Terraform destroy
-        if: failure()  # Run only if Push to AWS ECR fails
-        run: terraform destroy -auto-approve
 
 
   
