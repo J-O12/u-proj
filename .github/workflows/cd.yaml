@@ -55,7 +55,7 @@ jobs:
       - name: Build Docker image
         working-directory: ./frontend
         run: |
-          docker build -t udac:${{ github.sha }} .
+          docker build -t frontend:${{ github.sha }} .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -97,6 +97,11 @@ jobs:
           terraform init
           terraform apply -auto-approve
 
+
+      - name: Terraform destroy
+        if: failure()  # Run only if terraform apply fails
+        run: terraform destroy -auto-approve
+
       - name: download build image artifact
         uses: actions/download-artifact@v3
         with:
@@ -106,6 +111,10 @@ jobs:
       - name: Push to AWS ECR
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${{ github.sha }}
+
+      - name: Terraform destroy
+        if: failure()  # Run only if Push to AWS ECR fails
+        run: terraform destroy -auto-approve
 
 
   
