@@ -39,8 +39,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     #  # needs: [lint-and-test]
-    # outputs:
-    #   image_version: ${{ steps.docker_image.outputs.image }}
+    outputs:
+      image_version: ${{ steps.build.outputs.image_id }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
