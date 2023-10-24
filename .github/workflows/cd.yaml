@@ -70,7 +70,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: frontend:${{ github.sha }
+          tags: frontend:${{ github.sha }}
 
       - id: docker_image
         working-directory: ./frontend
