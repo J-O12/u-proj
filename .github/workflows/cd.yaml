@@ -55,6 +55,7 @@ jobs:
         run: npm ci
     
       - name: Build Docker image
+        working-directory: ./frontend
         id: build
         run: |
           docker build -t frontend:${{ github.sha }} .
