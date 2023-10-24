@@ -38,9 +38,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-     # needs: [lint-and-test]
-    outputs:
-      image_version: ${{ steps.docker_image.outputs.image }}
+    #  # needs: [lint-and-test]
+    # outputs:
+    #   image_version: ${{ steps.docker_image.outputs.image }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -58,20 +58,25 @@ jobs:
         working-directory: ./frontend
         run: |
           docker build -t frontend:${{ github.sha }} .
-          echo "image=frontend:${{ github.sha }}" >> "$GITHUB_OUTPUT"  
+
+      - name: display image
+        run: docker images
+         
+          
+        # echo "image=frontend:${{ github.sha }}" >> "$GITHUB_OUTPUT"  
 
       
-  deploy-to-infra:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # deploy-to-infra:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: latest
 
       # - uses: actions/checkout@v1
       # - name: Install Terraform
@@ -94,12 +99,12 @@ jobs:
       #     terraform init
       #     terraform apply -auto-approve
 
-      - env:
-          BUILT_IMAGE: ${{needs.build.outputs.image_version}}
-        run: echo "$BUILT_IMAGE"
+      # - env:
+      #     BUILT_IMAGE: ${{needs.build.outputs.image_version}}
+      #   run: echo "$BUILT_IMAGE"
 
-      - name: display image
-        run: docker images
+      # - name: display image
+      #   run: docker images
 
       # - name: Push to AWS ECR
       #   run: |
