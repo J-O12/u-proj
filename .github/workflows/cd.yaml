@@ -54,11 +54,12 @@ jobs:
         working-directory: ./frontend
         run: npm ci
     
-      - id: docker_image
-        working-directory: ./frontend
+      - name: Build Docker image
+        id: build
         run: |
           docker build -t frontend:${{ github.sha }} .
-          echo "image=frontend:${{ github.sha }}" >> "$GITHUB_OUTPUT" 
+          IMAGE_ID=$(docker images -q frontend:${{ github.sha }})
+          echo "::set-output name=image_id::${IMAGE_ID}"
       
       - name: display image
         run: docker images
@@ -71,31 +72,35 @@ jobs:
         # echo "image=frontend:${{ github.sha }}" >> "$GITHUB_OUTPUT"  
 
       
-  # deploy-to-infra:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  deploy-to-infra:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: latest
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
 
-  #     - uses: actions/checkout@v1
-  #     - name: Install Terraform
-  #       uses: little-core-labs/install-terraform@v2.0.0
-  #       with:
-  #           version: 1.6.2
+      - uses: actions/checkout@v1
+      - name: Install Terraform
+        uses: little-core-labs/install-terraform@v2.0.0
+        with:
+            version: 1.6.2
 
-  #     - name: Configure AWS Credentials
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: ${{ secrets.AWS_REGION }}
-  #         aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
+
+      - name: Pull image ID from previous job
+        id: build
+        run: echo "Image ID:${{ needs.build.outputs.image_id }}"
 
 
   #     - name: Terraform apply
@@ -142,12 +147,11 @@ jobs:
       # - name: display image
       #   run: docker images
 
-      # - name: Push to AWS ECR
-      #   run: |
-      #     aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-      #     echo "$BUILT_IMAGE: ${{needs.build.outputs.image_version}}"
-      #     docker tag frontend:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
-      #     docker push -a ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+      - name: Push to AWS ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          IMAGE_ID=${{ needs.build.outputs.image_id }}
+          docker tag ${IMAGE_ID} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
 
 
 
