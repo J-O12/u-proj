@@ -62,6 +62,7 @@ jobs:
       - name: display image
         run: docker images
          
+
           
         # echo "image=frontend:${{ github.sha }}" >> "$GITHUB_OUTPUT"  
 
