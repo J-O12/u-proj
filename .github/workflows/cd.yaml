@@ -95,14 +95,15 @@ jobs:
       #     terraform init
       #     terraform apply -auto-approve
 
-      - env:
-          BUILT_IMAGE: ${{needs.build.outputs.image_version}}
-        run: echo "$BUILT_IMAGE"
+      # - env:
+      #     BUILT_IMAGE: ${{needs.build.outputs.image_version}}
+      #   run: echo "$BUILT_IMAGE"
 
       - name: Push to AWS ECR
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          docker tag $BUILT_IMAGE ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+          echo "$BUILT_IMAGE: ${{needs.build.outputs.image_version}}"
+          docker tag frontend:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
           docker push -a ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
 
 
