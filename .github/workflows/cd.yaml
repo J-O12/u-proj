@@ -37,7 +37,38 @@ jobs:
   #       if: failure()  # Run only if tests fail
   #       run: echo "Tests failed. Please check and fix the issues."
 
-  # build:
+
+#   # build:
+#   build:
+#     runs-on: ubuntu-latest
+#     #  # needs: [lint-and-test]
+#     outputs:
+#       image_version: ${{ steps.build.outputs.image_id }}
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: latest
+
+#       - name: Install Dependencies
+#         working-directory: ./frontend
+#         run: npm ci
+    
+#       - name: Build Docker image
+#         working-directory: ./frontend
+#         id: build
+#         run: |
+#           docker build -t frontend:${{ github.sha }} .
+#           IMAGE_ID=$(docker images -q frontend:${{ github.sha }})
+#           echo "::set-output name=image_id::${IMAGE_ID}"
+      
+#       - name: display image
+#         run: docker images
+      
+  # deploy-to-infra:
   #   runs-on: ubuntu-latest
   #    # needs: [lint-and-test]
   #   outputs:
