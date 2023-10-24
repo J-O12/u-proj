@@ -93,15 +93,9 @@ jobs:
           terraform init
           terraform apply -auto-approve
 
-      - name: download build image artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: my-docker-image
-          path: setup/terraform
-
       - env:
-          IMAGE_VERSION: ${{needs.build.outputs.image_version}}
-        run: echo "$IMAGE_VERSION"
+          BUILT_IMAGE: ${{needs.build.outputs.image_version}}
+        run: echo "$BUILT_IMAGE"
 
       - name: Push to AWS ECR
         run: |
