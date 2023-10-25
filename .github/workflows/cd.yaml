@@ -143,6 +143,9 @@ jobs:
       - name: Deploy to EKS
         run: |
           cd frontend/k8s
-          kubectl apply -f kustomization.yml
+          
           kubectl apply -f deployment.yml
           kubectl apply -f service.yml
+
+
+       # kubectl apply -f kustomization.yml
