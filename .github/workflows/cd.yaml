@@ -104,11 +104,11 @@ jobs:
         with:
           node-version: latest
 
-      # - uses: actions/checkout@v1
-      # - name: Install Terraform
-      #   uses: little-core-labs/install-terraform@v2.0.0
-      #   with:
-      #       version: 1.6.2
+      - uses: actions/checkout@v1
+      - name: Install Terraform
+        uses: little-core-labs/install-terraform@v2.0.0
+        with:
+            version: 1.6.2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -119,22 +119,22 @@ jobs:
           aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
 
 
-      # - name: Terraform apply
-      #   run: |
-      #     cd setup/terraform
-      #     terraform init
-      #     terraform apply -auto-approve
-      # - env:
-      #     BUILT_IMAGE: ${{needs.build.outputs.image_version}}
-      #   run: echo "$BUILT_IMAGE"
+      - name: Terraform apply
+        run: |
+          cd setup/terraform
+          terraform init
+          terraform apply -auto-approve
+      - env:
+          BUILT_IMAGE: ${{needs.build.outputs.image_version}}
+        run: echo "$BUILT_IMAGE"
 
-      # - name: Push to AWS ECR
-      #   working-directory: ./frontend
-      #   run: |
-      #     aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-      #     docker build -t frontend:${{ github.sha }} .
-      #     docker tag frontend:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
-      #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+      - name: Push to AWS ECR
+        working-directory: ./frontend
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          docker build -t frontend:${{ github.sha }} .
+          docker tag frontend:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
 
 
       - name: update kubeconfig
