@@ -2,7 +2,7 @@
 name: Frontend Deployment workflow
 
 on:
-  # workflow_dispatch:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -147,5 +147,3 @@ jobs:
           kubectl apply -f deployment.yml
           kubectl apply -f service.yml
 
-
-       # kubectl apply -f kustomization.yml
